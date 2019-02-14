@@ -16,11 +16,11 @@ public class TaskIO {
             os.write(task.getTitle().length());
             os.write(task.getTitle().getBytes());
             ((DataOutputStream) os).writeBoolean(task.isActive());
-            os.write(task.getRepeatInterval());
             ((DataOutputStream) os).writeBoolean(task.isRepeated());
             if (task.isRepeated()){
                 ((DataOutputStream) os).writeLong(task.getStartTime().getTime());
                 ((DataOutputStream) os).writeLong(task.getEndTime().getTime());
+                ((DataOutputStream) os).writeInt(task.getRepeatInterval());
             }else {
                 ((DataOutputStream) os).writeLong(task.getTime().getTime());
             }
@@ -38,10 +38,10 @@ public class TaskIO {
             }
             String title = new String(tmp);
             boolean tmpActive = ((DataInputStream) inputStream).readBoolean();
-            int tmpInterval = inputStream.read();
             if (((DataInputStream) inputStream).readBoolean()){
-                Date tmpStartTime = new Date(inputStream.read());
-                Date tmpEndTime = new Date(inputStream.read());
+                Date tmpStartTime = new Date(((DataInputStream) inputStream).readLong());
+                Date tmpEndTime = new Date(((DataInputStream) inputStream).readLong());
+                int tmpInterval = ((DataInputStream) inputStream).readInt();
                 Task task = new Task(title,tmpStartTime,tmpEndTime,tmpInterval);
                 task.setActive(tmpActive);
                 tasks.add(task);
