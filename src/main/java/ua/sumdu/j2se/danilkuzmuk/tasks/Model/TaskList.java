@@ -1,7 +1,8 @@
 package ua.sumdu.j2se.danilkuzmuk.tasks.Model;
 import ua.sumdu.j2se.danilkuzmuk.tasks.Exceptions.IllegalIntervalException;
 import ua.sumdu.j2se.danilkuzmuk.tasks.Exceptions.IllegalTaskException;
-import java.io.Serializable;
+
+import java.io.*;
 
 
 public abstract class TaskList implements Iterable, Cloneable, Serializable {
@@ -41,8 +42,25 @@ public abstract class TaskList implements Iterable, Cloneable, Serializable {
     }
 
     @Override
-    public TaskList clone() throws CloneNotSupportedException {
-        return (TaskList) super.clone();
+    public TaskList clone() {
+        TaskList clone = null;
+        TaskList cloned = null;
+        try {
+            clone = (TaskList) super.clone();
+            cloned = getDeepCloning(clone);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cloned;
+    }
+    private TaskList getDeepCloning(Object obj) throws IOException, ClassNotFoundException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(obj);
+        oos.close();
+        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+        ObjectInputStream ois = new ObjectInputStream(bais);
+        return (TaskList) ois.readObject();
     }
 }
 
