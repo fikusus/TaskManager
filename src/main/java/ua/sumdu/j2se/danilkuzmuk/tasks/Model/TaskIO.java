@@ -7,7 +7,6 @@ public class TaskIO {
 
 
     public static void write(TaskList tasks, OutputStream out) throws IOException {
-        System.out.println(1);
         OutputStream os = new DataOutputStream(out);
         Iterator<Task> taskIterator = tasks.iterator();
         out.write(tasks.size());

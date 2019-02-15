@@ -1,4 +1,5 @@
 package ua.sumdu.j2se.danilkuzmuk.tasks.Model;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -13,7 +14,7 @@ public class Task implements Cloneable {
     private Date start;
     private Date end;
     private int interval;
-    private boolean active;
+    private boolean active = true;
     private boolean repeated;
 
     /**
@@ -211,6 +212,8 @@ public class Task implements Cloneable {
 
     @Override
     public String toString() {
+        String str = new String();
+        SimpleDateFormat dateFormat = new SimpleDateFormat();
         if (repeated) {
             return "Task{"
                     + "title='" + title + '\''
@@ -220,12 +223,13 @@ public class Task implements Cloneable {
                     + ", repeated=" + repeated
                     + '}';
         } else {
-            return "Task{"
-                    + "title='" + title + '\''
-                    + ", time=" + time
-                    + ", active=" + active
-                    + ", repeated=" + repeated
-                    + '}';
+            str = "Задача:'" + title+ "'" + " Время исполнения:" + dateFormat.format(time);
+            if(active){
+                str+=" Задача активна";
+            }else {
+                str+=" Задача не активна";
+            }
+            return str;
         }
     }
     @Override

@@ -45,7 +45,7 @@ public class ArrayTaskList extends TaskList {
             int tmp = getRemoveValue(index);
             return yourTasks[tmp];
         } catch (IllegalArgumentException e) {
-            System.out.println("You are trying to find an array element that is outside the array");
+            //System.out.println("You are trying to find an array element that is outside the array");
             return null;
         }
 
@@ -148,6 +148,15 @@ public class ArrayTaskList extends TaskList {
             } catch (IndexOutOfBoundsException ex) {
                 throw new ConcurrentModificationException();
             }
+        }
+    }
+    @Override
+    public TaskList clone()  {
+        try {
+            return (ArrayTaskList) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }
