@@ -215,13 +215,13 @@ public class Task implements Cloneable {
         String str = new String();
         SimpleDateFormat dateFormat = new SimpleDateFormat();
         if (repeated) {
-            return "Task{"
-                    + "title='" + title + '\''
-                    + ", start=" + start
-                    + ", end=" + end + ", interval=" + interval
-                    + ", active=" + active
-                    + ", repeated=" + repeated
-                    + '}';
+            str += "Задача:'" + title+ "'" + " Время начала:" + dateFormat.format(start) + " Время конца:" + dateFormat.format(end) + " С интервалом:" + interval;
+            if(active){
+                str+=" Задача активна";
+            }else {
+                str+=" Задача не активна";
+            }
+            str+=" с повторением";
         } else {
             str = "Задача:'" + title+ "'" + " Время исполнения:" + dateFormat.format(time);
             if(active){
@@ -229,9 +229,12 @@ public class Task implements Cloneable {
             }else {
                 str+=" Задача не активна";
             }
-            return str;
+            str+=" без повторения";
         }
+        return str;
     }
+
+
     @Override
     public Task clone() throws CloneNotSupportedException {
         return (Task) super.clone();

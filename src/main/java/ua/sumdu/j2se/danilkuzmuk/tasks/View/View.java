@@ -5,6 +5,8 @@ import ua.sumdu.j2se.danilkuzmuk.tasks.Controller.ViewController;
 import ua.sumdu.j2se.danilkuzmuk.tasks.Model.ArrayTaskList;
 import ua.sumdu.j2se.danilkuzmuk.tasks.Model.Task;
 
+import javax.xml.crypto.Data;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
@@ -47,6 +49,7 @@ public class View
         viewController.AddNoRepeatMenu();
     }
     public void TaskListView(SortedMap<Date, Set<Task>> tsk){
+        SimpleDateFormat dateFormat = new SimpleDateFormat();
         System.out.println(separator);
         Iterator<Date> tskIter = tsk.keySet().iterator();
         while (tskIter.hasNext()){
@@ -54,7 +57,8 @@ public class View
             Iterator<Task> stskIter = tsk.get(keySet).iterator();
             while (stskIter.hasNext()){
                 Task sTask = stskIter.next();
-                System.out.println(sTask.toString());
+                System.out.println("На время " + dateFormat.format(keySet));
+                    System.out.println("    Задача'"+sTask.getTitle()+"'");
             }
         }
         MainMenu();
