@@ -1,10 +1,9 @@
 package ua.sumdu.j2se.danilkuzmuk.tasks;
 
-
 import ua.sumdu.j2se.danilkuzmuk.tasks.Controller.ViewController;
 import ua.sumdu.j2se.danilkuzmuk.tasks.Model.ArrayTaskList;
+import ua.sumdu.j2se.danilkuzmuk.tasks.Model.Model;
 import ua.sumdu.j2se.danilkuzmuk.tasks.Model.TaskIO;
-import ua.sumdu.j2se.danilkuzmuk.tasks.Model.TaskList;
 import ua.sumdu.j2se.danilkuzmuk.tasks.View.View;
 
 import java.io.File;
@@ -21,8 +20,10 @@ public class Start  {
         }
         ViewController viewController = new ViewController();
         View view = new View();
-        viewController.setView(view);
-        viewController.setTaskList(tasks);
+        Model model = new Model();
+        model.setView(view);
+        model.setTaskList(tasks);
+        viewController.setModel(model);
         view.setViewController(viewController);
         view.MainMenu();
 

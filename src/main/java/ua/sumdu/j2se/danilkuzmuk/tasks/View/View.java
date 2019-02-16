@@ -84,6 +84,27 @@ public class View
         }
         viewController.ChangeControl(key);
     }
+    public String ChangeTasks(){
+        System.out.println(separator);
+        System.out.println("Выберите что необходимо изменить");
+        System.out.println("1)Время выполнения(задача будет неповторяющиеся)");
+        System.out.println("2)Время начала/конца и интервал(задача будет повторяющиеся)");
+        System.out.println("3)Название");
+        System.out.println("4)Активность");
+        System.out.println("5)В меню");
+        return viewController.ReaderText();
+    }
+
+    public String PrintAndReadText(String str){
+        System.out.println(separator);
+        System.out.println(str);
+        return viewController.ReaderText();
+    }
+    public void PrintText(String str){
+        System.out.println(separator);
+        System.out.println(str);
+    }
+
     public void InvalidData(){
         System.out.println("Неверний формат ввода");
         MainMenu();

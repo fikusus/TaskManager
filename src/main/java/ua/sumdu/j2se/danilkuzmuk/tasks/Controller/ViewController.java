@@ -1,61 +1,39 @@
 package ua.sumdu.j2se.danilkuzmuk.tasks.Controller;
 
-import ua.sumdu.j2se.danilkuzmuk.tasks.Model.ArrayTaskList;
-import ua.sumdu.j2se.danilkuzmuk.tasks.Model.Task;
-import ua.sumdu.j2se.danilkuzmuk.tasks.Model.TaskIO;
-import ua.sumdu.j2se.danilkuzmuk.tasks.Model.Tasks;
-import ua.sumdu.j2se.danilkuzmuk.tasks.View.View;
+import ua.sumdu.j2se.danilkuzmuk.tasks.Model.*;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ViewController {
 
-    private View view;
-    private ArrayTaskList taskList;
+    private Model model;
 
-    public void setTaskList(ArrayTaskList taskList) {
-        this.taskList = taskList;
-    }
-
-    public void setView(View view) {
-        this.view = view;
+    public void setModel(Model model) {
+        this.model = model;
     }
 
     public void MainMenuControl(){
         Scanner in = new Scanner(System.in);
-        switch (in.nextInt()){
-            case 1:
-                view.AddSubMenu();
+        switch (in.next()){
+            case "1":
+                model.CallView(1);
                 break;
-            case 2:
-                Calendar tdCalendar = new GregorianCalendar();
-                tdCalendar.set(Calendar.HOUR,23);
-                tdCalendar.set(Calendar.MINUTE,59);
-                tdCalendar.set(Calendar.SECOND,59);
-                tdCalendar.set(Calendar.MILLISECOND,999);
-                view.TaskListView(Tasks.calendar(taskList.clone(),new Date(),tdCalendar.getTime()));
+            case "2":
+                model.Incoming(0);
                 break;
-            case 3:
-                Calendar weCalendar = new GregorianCalendar();
-                weCalendar.set(Calendar.HOUR,23);
-                weCalendar.set(Calendar.MINUTE,59);
-                weCalendar.set(Calendar.SECOND,59);
-                weCalendar.set(Calendar.MILLISECOND,999);
-                weCalendar.set(Calendar.DAY_OF_WEEK,7);
-                view.TaskListView(Tasks.calendar(taskList.clone(),new Date(),weCalendar.getTime()));
+            case "3":
+                model.Incoming(1);
                 break;
-            case 4:
-                view.ShowAllTaskList(taskList);
+            case "4":
+                model.CallView(2);
                 break;
-            case 5:
-                System.exit(0);
+            case "5":
+                model.ExitApp();
                 break;
             default:
-                view.MainMenu();
+                model.CallView(0);
                 break;
         }
     }
@@ -63,90 +41,68 @@ public class ViewController {
         Scanner in = new Scanner(System.in);
         switch (in.nextInt()){
             case 1:
-                view.AddRepeatMenu();
+                model.CallView(3);
                 break;
             case 2:
-                view.AddNoRepeatMenu();
+                model.CallView(4);
                 break;
             default:
-                view.AddSubMenu();
+                model.CallView(0);
                 break;
         }
     }
     public void AddNoRepeatMenu()  {
-        String title;
         SimpleDateFormat ft = new SimpleDateFormat ("ss:mm:HH:dd:MM:yyyy");
         Scanner in = new Scanner(System.in);
-        title = in.nextLine();
-        String str = in.nextLine();
-        Date time = new Date();
+        String title = in.nextLine();
+        String dateStr = in.nextLine();
         try {
-            time = ft.parse(str);
+            Date time = ft.parse(dateStr);
             Task tsk = new Task(title,time);
-            taskList.add(tsk);
-            Save();
+            model.AddTask(tsk);
         } catch (ParseException e) {
-            System.out.println("Неверний формат ввода");
-            view.AddNoRepeatMenu();
+            model.CallView(5);
         }
     }
     public void AddRepeatMenu()  {
-        String title;
         SimpleDateFormat ft = new SimpleDateFormat ("ss:mm:HH:dd:MM:yyyy");
         Scanner in = new Scanner(System.in);
-        title = in.nextLine();
-        Date start = new Date();
-        Date end = new Date();
+        String title = in.nextLine();
         try {
-            start = ft.parse(in.nextLine());
-            end = ft.parse(in.nextLine());
+            Date start = ft.parse(in.nextLine());
+            Date end = ft.parse(in.nextLine());
             Task tsk = new Task(title,start,end,in.nextInt());
-            taskList.add(tsk);
-            Save();
+            model.AddTask(tsk);
         } catch (ParseException e) {
-            view.InvalidData();
+            model.CallView(5);
         }
     }
     public void TaskListMenu() {
         Scanner in = new Scanner(System.in);
         switch (in.nextInt()) {
             case 1:
-                view.ChangeMenu(true);
+                model.CallView(6);
                 break;
             case 2:
-                view.ChangeMenu(false);
+                model.CallView(7);
                 break;
             case 3:
-                view.MainMenu();
+                model.CallView(0);
                 break;
             default:
-                view.ShowAllTaskList(taskList);
+                model.CallView(2);
                 break;
         }
     }
 
     public void ChangeControl(boolean key){
         Scanner in = new Scanner(System.in);
-        if(key){
-
-        }else {
-            if (!taskList.remove(taskList.getTask(in.nextInt()))){
-                view.InvalidData();
-            }else{
-                Save();
-                view.MainMenu();
-            }
-        }
+        model.ChangeTaskList(in.nextInt(),key);
     }
 
-
-
-    public void Save(){
-        try {
-            TaskIO.writeBinary(taskList,new File("./src/main/java/ua/sumdu/j2se/danilkuzmuk/tasks/Saves/TaskList.txt"));
-            view.MainMenu();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public String ReaderText (){
+        Scanner in = new Scanner(System.in);
+        return in.next();
     }
+
 }
