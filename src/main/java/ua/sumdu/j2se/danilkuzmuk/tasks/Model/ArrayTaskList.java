@@ -1,10 +1,11 @@
 package ua.sumdu.j2se.danilkuzmuk.tasks.Model;
+import org.apache.log4j.Logger;
 import ua.sumdu.j2se.danilkuzmuk.tasks.Exceptions.IllegalIntervalException;
 import ua.sumdu.j2se.danilkuzmuk.tasks.Exceptions.IllegalTaskException;
 import java.util.*;
 public class ArrayTaskList extends TaskList {
     Task[] yourTasks = new Task[0];
-    
+    private Logger log = Logger.getLogger(ArrayTaskList.class);
     @Override
     public void add(Task task) {
         try {
@@ -155,7 +156,7 @@ public class ArrayTaskList extends TaskList {
         try {
             return (ArrayTaskList) super.clone();
         } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+            log.error("Список задач невозможно клонировать");
             return null;
         }
     }
