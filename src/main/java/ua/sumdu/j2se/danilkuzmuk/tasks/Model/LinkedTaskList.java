@@ -1,4 +1,5 @@
 package ua.sumdu.j2se.danilkuzmuk.tasks.Model;
+import org.apache.log4j.Logger;
 import ua.sumdu.j2se.danilkuzmuk.tasks.Exceptions.IllegalIntervalException;
 import ua.sumdu.j2se.danilkuzmuk.tasks.Exceptions.IllegalTaskException;
 import java.util.*;
@@ -6,7 +7,7 @@ public class LinkedTaskList extends TaskList  {
     private Node first;
     private Node last;
     private int length;
-
+    private Logger log = Logger.getLogger(LinkedTaskList.class);
     @Override
     public void add(Task task) {
         try {
@@ -24,11 +25,11 @@ public class LinkedTaskList extends TaskList  {
             }
             length++;
         } catch (IllegalTaskException b) {
-            System.out.println("The task can not be empty");
+            log.info("Задача не может быть пустой");
         } catch (IllegalIntervalException j) {
-            System.out.println("Interval must be greater than zero");
+            log.error("Интервал должен быть больше нуля");
         } catch (IllegalArgumentException c) {
-            System.out.println("Time can not be less than zero");
+            log.info("Время должно быть больше нуля");
         }
 
     }
@@ -53,7 +54,7 @@ public class LinkedTaskList extends TaskList  {
             int tmp = getRemoveValue(index);
             return find(tmp);
         } catch (IllegalArgumentException e) {
-            System.out.println("You are trying to find an array element that is outside the array");
+            log.error("Вы пытаетесь найти задачу которая находиться за массивом");
             return null;
         }
 

@@ -2,17 +2,14 @@ package ua.sumdu.j2se.danilkuzmuk.tasks.View;
 
 
 import ua.sumdu.j2se.danilkuzmuk.tasks.Controller.Controller;
-import ua.sumdu.j2se.danilkuzmuk.tasks.Model.ArrayTaskList;
+import ua.sumdu.j2se.danilkuzmuk.tasks.Interfaces.ObserverView;
 import ua.sumdu.j2se.danilkuzmuk.tasks.Model.Task;
+import ua.sumdu.j2se.danilkuzmuk.tasks.Model.TaskList;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.SortedMap;
+import java.util.*;
 
-public class View
-{
+public class View implements ObserverView {
     private CalendarView calendarView = new CalendarView();
     private Controller controller;
     private String separator = "------------------------";
@@ -35,19 +32,9 @@ public class View
     public void addSubMenu(){
         System.out.println(separator);
         System.out.println("1)Добавить задачу с повторением");
-        System.out.println("2)Добавить задачу без повторение");
+        System.out.println("2)Добавить задачу без повторения");
         System.out.println("3)В меню");
-        controller.mainMenuControl(1);
-    }
-    public void addRepeatMenu(){
-        System.out.println(separator);
-        System.out.println("Введите:\nНазвание задачи\nВремя начала задачи в формате ss:mm:HH:dd:MM:yyyy\nВремя конца задачи в формате ss:mm:HH:dd:MM:yyyy\nИнтервал выполнения в секундах");
-        controller.addRepeatMenu();
-    }
-    public void addNoRepeatMenu(){
-        System.out.println(separator);
-        System.out.println("Введите:\nНазвание задачи\nВремя задачи в формате ss:mm:HH:dd:MM:yyyy");
-        controller.addNoRepeatMenu();
+        controller.changeControl(1,-1);
     }
     public void taskListView(SortedMap<Date, Set<Task>> tsk){
         SimpleDateFormat dateFormat = new SimpleDateFormat();
@@ -64,16 +51,18 @@ public class View
         }
         mainMenu();
     }
-    public void showAllTaskList(ArrayTaskList arr){
+    public void showAllTaskList(TaskList arr, boolean isChange){
         System.out.println(separator);
         for(int i = 0;i < arr.size();i++){
             System.out.println("(" + i + ")" + arr.getTask(i).toString());
         }
-        System.out.println(separator);
-        System.out.println("1)Изменть");
-        System.out.println("2)Удалить");
-        System.out.println("3)В меню");
-        controller.mainMenuControl(2);
+        if(isChange) {
+            System.out.println(separator);
+            System.out.println("1)Изменть");
+            System.out.println("2)Удалить");
+            System.out.println("3)В меню");
+            controller.mainMenuControl(2);
+        }
     }
 
     public void changeMenu(){
@@ -95,7 +84,7 @@ public class View
         System.out.println("3)Название");
         System.out.println("4)Активность");
         System.out.println("5)В меню");
-        controller.changeControl(index);
+        controller.changeControl(3,index);
     }
 
     public String printAndReadText(String str){
@@ -120,7 +109,12 @@ public class View
         mainMenu();
     }
     public void drawCalendar(){
-        calendarView.drawCalendar(printAndReadInt("Введите желаемый месяц"),printAndReadInt("Введите желаемый год"));
+        calendarView.drawCalendar(printAndReadInt("Введите желаемый месяц"),printAndReadInt("Введите желаемый год"),controller.getModel().getTaskList());
         mainMenu();
+    }
+
+    @Override
+    public void update(TaskList taskList) {
+        showAllTaskList(taskList,false);
     }
 }

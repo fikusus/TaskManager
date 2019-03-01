@@ -1,6 +1,5 @@
 package ua.sumdu.j2se.danilkuzmuk.tasks.Model;
 
-import sun.rmi.runtime.Log;
 import ua.sumdu.j2se.danilkuzmuk.tasks.Controller.Controller;
 
 
@@ -10,12 +9,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import org.apache.log4j.Logger;
+import ua.sumdu.j2se.danilkuzmuk.tasks.Interfaces.ObservableModel;
+import ua.sumdu.j2se.danilkuzmuk.tasks.Interfaces.ObserverView;
 
-public class Model {
+public class Model implements ObservableModel {
 
     private Logger log = Logger.getLogger(Model.class);
     private Controller controller;
     private ArrayTaskList taskList;
+    private ArrayList<ObserverView> observerViews = new ArrayList<>();
     private SimpleDateFormat ft = new SimpleDateFormat ("ss:mm:HH:dd:MM:yyyy");
 
     public void setController(Controller controller) {
@@ -40,16 +42,6 @@ public class Model {
         }
     }
 
-    public void callView(int key){
-        switch (key){
-            case 6:
-                controller.getView().changeMenu();
-                break;
-             case 7:
-                 controller.getView().changeMenu();
-                break;
-        }
-    }
     public SortedMap incomingToday(){
         return Tasks.calendar(taskList.clone(),new Date(),  getTodayCalendar().getTime());
     }
@@ -69,14 +61,47 @@ public class Model {
 
     public void addTask(Task task){
         taskList.add(task);
+        notifyObservers();
         saveData();
     }
+
+    public void addNoRepeatMenu(int index)  {
+        String title = controller.getViewController().printAndReadText("Введите название задачи");
+        String dateStr = controller.getViewController().printAndReadText("Время задачи в формате ss:mm:HH:dd:MM:yyyy");
+        try {
+            Date time = ft.parse(dateStr);
+            Task tsk = new Task(title,time);
+            addTask(tsk);
+        } catch (ParseException e) {
+            log.info("Формат входных данных неверный");
+            controller.getViewController().invalidData();
+        }
+    }
+
+    public void addRepeatMenu(int index)  {
+        String title = controller.getViewController().printAndReadText("Введите название задачи");
+        String startTime = controller.getViewController().printAndReadText("Время начала задачи в формате ss:mm:HH:dd:MM:yyyy");
+        String endTime = controller.getViewController().printAndReadText("Время конца задачи в формате ss:mm:HH:dd:MM:yyyy");
+        int interval = Integer.valueOf(controller.getViewController().printAndReadText("Интервал выполнения в секундах"));
+        try {
+            Date start = ft.parse(startTime);
+            Date end = ft.parse(endTime);
+            Task tsk = new Task(title,start,end,interval);
+            addTask(tsk);
+        } catch (ParseException e) {
+            log.info("Формат входных данных неверный");
+            controller.getViewController().invalidData();
+        }
+    }
+
     public void chNoRepeatTime(int index){
         String time = controller.getViewController().printAndReadText("Время задачи в формате ss:mm:HH:dd:MM:yyyy");
         try {
             Date tmpTime = ft.parse(time);
             taskList.getTask(index).setTime(tmpTime);
+            notifyObservers();
         } catch (ParseException e) {
+            log.info("Формат входных данных неверный");
             controller.getViewController().invalidData();
         }
         saveData();
@@ -89,10 +114,13 @@ public class Model {
             Date endDate = ft.parse(endTime);
             int interval = Integer.valueOf(controller.getViewController().printAndReadText("Интервал выполнения в секундах"));
             taskList.getTask(index).setTime(startDate,endDate,interval);
+            notifyObservers();
         } catch (ParseException e) {
+            log.info("Формат входных данных неверный");
             controller.getViewController().invalidData();
         }
         catch (NumberFormatException a){
+            log.info("Формат входных данных неверный");
             controller.getViewController().invalidData();
         }
         saveData();
@@ -100,6 +128,7 @@ public class Model {
 
     public void chName(int index){
         taskList.getTask(index).setTitle(controller.getViewController().printAndReadText("Введите новое название"));
+        notifyObservers();
         saveData();
     }
 
@@ -107,9 +136,11 @@ public class Model {
         if (taskList.getTask(index).isActive()){
             controller.getViewController().printText("Задача деактивирована");
             taskList.getTask(index).setActive(false);
+            notifyObservers();
         }else {
             controller.getViewController().printText("Задача активирована");
             taskList.getTask(index).setActive(true);
+            notifyObservers();
         }
         saveData();
     }
@@ -118,8 +149,28 @@ public class Model {
         if (!taskList.remove(taskList.getTask(index))){
             controller.getViewController().invalidData();
         }else{
+            notifyObservers();
             saveData();
             controller.getViewController().mainMenu();
+        }
+    }
+    public void mainMenu(){
+        controller.getViewController().mainMenu();
+    }
+    @Override
+    public void registerObserver(ObserverView o) {
+        observerViews.add(o);
+    }
+
+    @Override
+    public void removeObserver(ObserverView o) {
+        observerViews.remove(o);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (ObserverView obsView:observerViews) {
+            obsView.update(taskList);
         }
     }
 

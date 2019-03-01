@@ -43,7 +43,7 @@ public abstract class TaskList implements Iterable, Cloneable, Serializable {
     }
 
     @Override
-    public TaskList clone() throws CloneNotSupportedException {
+    public TaskList clone() {
         try {
             return (TaskList) super.clone();
         } catch (CloneNotSupportedException e) {

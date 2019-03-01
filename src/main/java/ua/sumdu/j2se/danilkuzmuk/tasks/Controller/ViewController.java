@@ -20,14 +20,7 @@ public class ViewController {
     }
 
     public void showAllTaskList(){
-        controller.getView().showAllTaskList(controller.getModel().getTaskList());
-    }
-    public void addRepeatMenu(){
-        controller.getView().addRepeatMenu();
-    }
-
-    public void addNoRepeatMenu(){
-        controller.getView().addNoRepeatMenu();
+        controller.getView().showAllTaskList(controller.getModel().getTaskList(),true);
     }
 
     public void invalidData(){

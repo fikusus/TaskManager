@@ -17,11 +17,11 @@ public class ArrayTaskList extends TaskList {
             tmp[yourTasks.length] = task;
             yourTasks = tmp;
         } catch (IllegalTaskException b) {
-            System.out.println("The task can not be empty");
+            log.info("Задача не может быть пустой");
         } catch (IllegalIntervalException j) {
-            System.out.println("Interval must be greater than zero");
+            log.error("Интервал должен быть больше нуля");
         } catch (IllegalArgumentException c) {
-            System.out.println("Time can not be less than zero");
+            log.info("Время должно быть больше нуля");
         }
 
     }
@@ -46,7 +46,7 @@ public class ArrayTaskList extends TaskList {
             int tmp = getRemoveValue(index);
             return yourTasks[tmp];
         } catch (IllegalArgumentException e) {
-            //System.out.println("You are trying to find an array element that is outside the array");
+            log.error("Вы пытаетесь найти задачу которая находиться за массивом");
             return null;
         }
 
@@ -153,11 +153,6 @@ public class ArrayTaskList extends TaskList {
     }
     @Override
     public TaskList clone()  {
-        try {
             return (ArrayTaskList) super.clone();
-        } catch (CloneNotSupportedException e) {
-            log.error("Список задач невозможно клонировать");
-            return null;
-        }
     }
 }

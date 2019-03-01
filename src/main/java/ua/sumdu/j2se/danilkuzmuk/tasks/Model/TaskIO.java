@@ -1,10 +1,12 @@
 package ua.sumdu.j2se.danilkuzmuk.tasks.Model;
 
+import org.apache.log4j.Logger;
+
 import java.io.*;
 import java.util.*;
 
 public class TaskIO {
-
+    private static Logger log = Logger.getLogger(LinkedTaskList.class);
 
     public static void write(TaskList tasks, OutputStream out) throws IOException {
         OutputStream os = new DataOutputStream(out);
