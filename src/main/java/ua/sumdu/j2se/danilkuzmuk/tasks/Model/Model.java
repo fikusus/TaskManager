@@ -18,7 +18,7 @@ public class Model implements ObservableModel {
     private Controller controller;
     private ArrayTaskList taskList;
     private ArrayList<ObserverView> observerViews = new ArrayList<>();
-    private SimpleDateFormat ft = new SimpleDateFormat ("ss:mm:HH:dd:MM:yyyy");
+    private SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/yyyy-HH:mm:ss");
 
     public void setController(Controller controller) {
         this.controller = controller;
@@ -67,7 +67,7 @@ public class Model implements ObservableModel {
 
     public void addNoRepeatMenu(int index)  {
         String title = controller.getViewController().printAndReadText("Введите название задачи");
-        String dateStr = controller.getViewController().printAndReadText("Время задачи в формате ss:mm:HH:dd:MM:yyyy");
+        String dateStr = controller.getViewController().printAndReadText("Время задачи в формате dd/MM/yyyy-HH:mm:ss");
         try {
             Date time = ft.parse(dateStr);
             Task tsk = new Task(title,time);
@@ -80,8 +80,8 @@ public class Model implements ObservableModel {
 
     public void addRepeatMenu(int index)  {
         String title = controller.getViewController().printAndReadText("Введите название задачи");
-        String startTime = controller.getViewController().printAndReadText("Время начала задачи в формате ss:mm:HH:dd:MM:yyyy");
-        String endTime = controller.getViewController().printAndReadText("Время конца задачи в формате ss:mm:HH:dd:MM:yyyy");
+        String startTime = controller.getViewController().printAndReadText("Время начала задачи в формате dd/MM/yyyy-HH:mm:ss");
+        String endTime = controller.getViewController().printAndReadText("Время конца задачи в формате dd/MM/yyyy-HH:mm:ss");
         int interval = Integer.valueOf(controller.getViewController().printAndReadText("Интервал выполнения в секундах"));
         try {
             Date start = ft.parse(startTime);
@@ -95,7 +95,7 @@ public class Model implements ObservableModel {
     }
 
     public void chNoRepeatTime(int index){
-        String time = controller.getViewController().printAndReadText("Время задачи в формате ss:mm:HH:dd:MM:yyyy");
+        String time = controller.getViewController().printAndReadText("Время задачи в формате dd/MM/yyyy-HH:mm:ss");
         try {
             Date tmpTime = ft.parse(time);
             taskList.getTask(index).setTime(tmpTime);
@@ -107,8 +107,8 @@ public class Model implements ObservableModel {
         saveData();
     }
     public void chRepeatTime(int index){
-        String startTime = controller.getViewController().printAndReadText("Время начала задачи в формате ss:mm:HH:dd:MM:yyyy");
-        String endTime = controller.getViewController().printAndReadText("Время конца задачи в формате ss:mm:HH:dd:MM:yyyy");
+        String startTime = controller.getViewController().printAndReadText("Время начала задачи в формате dd/MM/yyyy-HH:mm:ss");
+        String endTime = controller.getViewController().printAndReadText("Время конца задачи в формате dd/MM/yyyy-HH:mm:ss");
         try {
             Date startDate = ft.parse(startTime);
             Date endDate = ft.parse(endTime);

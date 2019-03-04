@@ -15,7 +15,6 @@ public class Controller {
     private Model model;
     private ViewController viewController;
     private ArrayList<HashMap<String,String>> methodCallKey = new ArrayList<>();
-    private SimpleDateFormat ft = new SimpleDateFormat ("ss:mm:HH:dd:MM:yyyy");
     private Logger log = Logger.getLogger(Controller.class);
 
     public Controller(View view, Model model, ViewController viewController) {

@@ -28,7 +28,6 @@ public class Notificator extends Thread {
         taskList = controller.getModel().getTaskList();
         if (SystemTray.isSupported()) {
             SystemTray tray = SystemTray.getSystemTray();
-
             java.awt.Image image = Toolkit.getDefaultToolkit().getImage("images/tray.gif");
             trayIcon = new TrayIcon(image);
             try {
@@ -39,26 +38,28 @@ public class Notificator extends Thread {
         }
         while (!isInterrupted()){
             try {
-                sleep(60000);
+                sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             Date curr = new Date();
-            Date past = new Date(curr.getTime() - 60000);
-            String notify = new String();
+            Date past = new Date(curr.getTime() - 1000);
+            StringBuilder notify = new StringBuilder();
                 SortedMap<Date, Set<Task>> tsk = Tasks.calendar(taskList.clone(),past,curr);
-                if (tsk.keySet().size() != 0) {
+                if (tsk.keySet().size() != 0 ) {
                     Iterator<Date> tskIter = tsk.keySet().iterator();
                     while (tskIter.hasNext()) {
                         Date keySet = tskIter.next();
                         Iterator<Task> stskIter = tsk.get(keySet).iterator();
-                        notify += dateFormat.format(keySet) + "\n";
+                        notify.append(dateFormat.format(keySet));
+                        notify.append("\n");
                         while (stskIter.hasNext()) {
                             Task sTask = stskIter.next();
-                            notify += "   " + sTask.getTitle() + "\n";
+                            notify.append("   " + sTask.getTitle());
+                            notify.append("\n");
                         }
                     }
-                    trayIcon.displayMessage("Напоминание", notify, TrayIcon.MessageType.INFO);
+                    trayIcon.displayMessage("Напоминание", notify.toString(), TrayIcon.MessageType.INFO);
                 }
         }
     }
